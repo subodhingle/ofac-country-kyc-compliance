@@ -1,0 +1,53 @@
+name: OFAC Country KYC Compliance · Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Setup Compact Compiler
+        uses: midnightntwrk/setup-compact-action@v1
+        with:
+          compact-version: 'latest'
+      - name: Compile Compact contract
+        run: npm run compile
+      - name: Test Compact contract
+        run: npm test
+      - name: Build frontend
+        run: npm run build
+      - name: Write release manifest
+        run: |
+          cat > release-manifest.json <<EOF
+          {"project":"ofac-country-kyc-compliance","tag":"${GITHUB_REF_NAME}","commit":"${GITHUB_SHA}","network":"preprod"}
+          EOF
+      - name: Package release artifacts
+        run: |
+          tar -czf subodh-kyc-frontend.tar.gz dist
+          tar -czf subodh-kyc-compact.tar.gz contracts/managed
+          tar -czf subodh-kyc-manifest.tar.gz release-manifest.json deployment.json
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "subodh-kyc-frontend.tar.gz" \
+            "subodh-kyc-compact.tar.gz" \
+            "subodh-kyc-manifest.tar.gz" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --generate-notes
