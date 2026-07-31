@@ -1,0 +1,7 @@
+{
+  "network": "preprod",
+  "contract": "kyc_check",
+  "contractAddress": "786f0834c00dfcc9bf72a12153b48447aadcb628178a9683c9178603c623bf2a",
+  "transactionHash": "2c6105977117aceb69ca78b65482f0fb71f290c3a38fa4add21cbab38bb12149",
+  "verifiedBy": "Midnight Preprod indexer"
+}
