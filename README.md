@@ -79,6 +79,8 @@ CI/CD is split by responsibility:
 
 See [AUTOMATION.md](./AUTOMATION.md) for operational details.
 
+The automation pins Compact compiler `0.30.0`, matching `@midnight-ntwrk/compact-runtime` `0.15.0`, so generated circuits and the TypeScript simulator use the same runtime ABI.
+
 ## Repository structure
 
 ```text
