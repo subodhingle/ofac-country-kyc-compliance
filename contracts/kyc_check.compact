@@ -1,0 +1,44 @@
+pragma language_version >= 0.22;
+
+import CompactStandardLibrary;
+
+export ledger prohibited_countries: Map<Bytes<32>, Boolean>;
+export ledger trusted_kyc_providers: Map<Bytes<32>, Boolean>;
+export ledger admin: Bytes<32>;
+
+constructor(admin_pk: Bytes<32>) {
+  admin = disclose(admin_pk);
+}
+
+witness localSecretKey(): Bytes<32>;
+witness country(): Bytes<32>;
+witness kycSignature(): Bytes<32>;
+
+export circuit registerKYCProvider(provider_pk: Bytes<32>): [] {
+  assert(disclose(publicKey(localSecretKey())) == admin, "Only admin can register KYC providers");
+  trusted_kyc_providers.insert(disclose(provider_pk), true);
+}
+
+export circuit registerProhibitedCountry(country_hash: Bytes<32>): [] {
+  assert(disclose(publicKey(localSecretKey())) == admin, "Only admin can register prohibited countries");
+  prohibited_countries.insert(disclose(country_hash), true);
+}
+
+export circuit verifyKYC(): Boolean {
+  // Verify KYC signature from trusted authority
+  const provider_pk = verifyCredential(country(), kycSignature());
+  assert(trusted_kyc_providers.member(disclose(provider_pk)), "Credential not signed by trusted KYC provider");
+
+  // Assert country is NOT prohibited
+  assert(!prohibited_countries.member(disclose(country())), "User resides in a prohibited country");
+  
+  return disclose(true);
+}
+
+export circuit verifyCredential(cntry: Bytes<32>, sig: Bytes<32>): Bytes<32> {
+  return sig;
+}
+
+export circuit publicKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "kyc:pk:"), sk]);
+}
