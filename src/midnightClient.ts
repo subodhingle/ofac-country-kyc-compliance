@@ -1,5 +1,6 @@
 import { CompiledContract } from '@midnight-ntwrk/compact-js';
 import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
+const NETWORK_ID = import.meta.env.VITE_NETWORK_ID || 'preview';
 import { deployContract, findDeployedContract } from '@midnight-ntwrk/midnight-js-contracts';
 import { indexerPublicDataProvider } from '@midnight-ntwrk/midnight-js-indexer-public-data-provider';
 import { createProofProvider } from '@midnight-ntwrk/midnight-js-types';
@@ -59,8 +60,8 @@ async function subodhBrowserProviders(wallet: ConnectedWallet) {
     zkConfigProvider,
     proofProvider: createProofProvider(provingProvider),
     walletProvider: {
-      getCoinPublicKey: () => parseCoinPublicKeyToHex(addresses.shieldedCoinPublicKey, 'preprod'),
-      getEncryptionPublicKey: () => parseEncPublicKeyToHex(addresses.shieldedEncryptionPublicKey, 'preprod'),
+      getCoinPublicKey: () => parseCoinPublicKeyToHex(addresses.shieldedCoinPublicKey, NETWORK_ID),
+      getEncryptionPublicKey: () => parseEncPublicKeyToHex(addresses.shieldedEncryptionPublicKey, NETWORK_ID),
       async balanceTx(tx: ledger.Transaction<any, any, any>) {
         const balanced = await wallet.balanceUnsealedTransaction(toHex(tx.serialize()));
         return ledger.Transaction.deserialize('signature', 'proof', 'binding', fromHex(balanced.tx));
@@ -87,7 +88,7 @@ function subodhBrowserWitnesses() {
 export async function deployKyccheckContract(wallet: ConnectedWallet) {
   const { providers, addresses } = await subodhBrowserProviders(wallet);
   const compiledContract = CompiledContract.make('kyc_check', contractModule.Contract).pipe(CompiledContract.withWitnesses(subodhBrowserWitnesses()));
-  const adminPubkey = fromHex(parseCoinPublicKeyToHex(addresses.shieldedCoinPublicKey, 'preprod'));
+  const adminPubkey = fromHex(parseCoinPublicKeyToHex(addresses.shieldedCoinPublicKey, NETWORK_ID));
   const deployed = await deployContract(providers, {
     compiledContract: compiledContract as any,
     privateStateId: 'kycCheckState',
@@ -108,6 +109,7 @@ export async function submitKyccheckCircuit(
   const zkConfigProvider = subodhZkConfigProvider(location.origin + '/midnight/kyc_check');
   const provingProvider = await wallet.getProvingProvider(zkConfigProvider);
   const providers = {
+    privateStateProvider: subodhPrivateStateProvider(),
     publicDataProvider: indexerPublicDataProvider(configuration.indexerUri, configuration.indexerWsUri),
     zkConfigProvider,
     proofProvider: createProofProvider(provingProvider),
@@ -139,4 +141,4 @@ if (typeof globalThis !== 'undefined' && !(globalThis as any).Buffer) {
   (globalThis as any).Buffer = Buffer;
 }
 
-setNetworkId(import.meta.env.VITE_NETWORK_ID || 'preprod');
+setNetworkId(NETWORK_ID);

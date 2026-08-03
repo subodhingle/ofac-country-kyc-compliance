@@ -1,7 +1,7 @@
 {
-  "network": "preprod",
-  "contract": "kyc_check",
-  "contractAddress": "786f0834c00dfcc9bf72a12153b48447aadcb628178a9683c9178603c623bf2a",
-  "transactionHash": "2c6105977117aceb69ca78b65482f0fb71f290c3a38fa4add21cbab38bb12149",
-  "verifiedBy": "Midnight Preprod indexer"
+  "contractAddress": "33fe17c53bfb7ecb08246f078d64bc71f5799a4e6dd3cd508fc0aeb6ab11fd55",
+  "network": "preview",
+  "deployedAt": "2026-08-03T19:08:56.741Z",
+  "deployer": "mn_addr_preview176gx8nm3xjt50mygm9srn5wkez09umg8jss5huqckmcxz8hhq42sxg7fvw",
+  "transactionHash": "00dc146bff84b28e470cb9ec5ea7f737bec808185df0ce739ceb32c9d3bcd30088"
 }
