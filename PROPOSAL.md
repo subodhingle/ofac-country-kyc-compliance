@@ -6,7 +6,7 @@ Geographic compliance checks routinely collect a passport, address, nationality,
 
 ## Product
 
-OFAC Country KYC Compliance is a Midnight Preprod application for selective-disclosure country screening. An administrator maintains trusted KYC providers and prohibited-country commitments. A user presents a private country credential, and the Compact contract returns a policy result without publishing the country or passport reference.
+OFAC Country KYC Compliance is a Midnight Preview application for selective-disclosure country screening. An administrator maintains trusted KYC providers and prohibited-country commitments. A user presents a private country credential, and the Compact contract returns a policy result without publishing the country or passport reference.
 
 ## Primary users
 
@@ -36,7 +36,7 @@ The proof demonstrates that a trusted provider attested to a country that is not
 ## User journey
 
 1. Connect a compatible Midnight wallet such as 1AM or Lace.
-2. Load the confirmed `kyc_check` Preprod deployment.
+2. Load the confirmed `kyc_check` Preview deployment.
 3. An authorized operator registers a KYC provider and prohibited-country commitments.
 4. The applicant supplies wallet-local credential witnesses.
 5. The browser requests a zero-knowledge proof and submits the transaction.
@@ -46,7 +46,7 @@ The proof demonstrates that a trusted provider attested to a country that is not
 
 - At least three executable contract tests pass.
 - Frontend and Compact contract checks run independently in CI.
-- The deployed Preprod address and transaction are discoverable from the repository.
+- The deployed Preview address and transaction are discoverable from the repository.
 - The application never stores a recovery phrase or raw passport record in Git.
 - The README clearly separates public state from private witness data.
 

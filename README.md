@@ -16,15 +16,17 @@ Traditional country screening reveals far more identity data than a service need
 
 The burnt-orange cockpit is intentionally distinct from the other Midnight applications: it uses a regulatory operations language, a country-screen workflow, and an explicit public/private evidence split.
 
-## Midnight Preprod deployment
+## Midnight Preview deployment
 
 | Field | Value |
 | --- | --- |
-| Network | Midnight Preprod |
+| Network | Midnight Preview |
 | Contract | `kyc_check` |
-| Contract address | `786f0834c00dfcc9bf72a12153b48447aadcb628178a9683c9178603c623bf2a` |
-| Deployment transaction | `2c6105977117aceb69ca78b65482f0fb71f290c3a38fa4add21cbab38bb12149` |
-| Verification | Confirmed by Midnight Preprod indexer |
+| Contract address | `33fe17c53bfb7ecb08246f078d64bc71f5799a4e6dd3cd508fc0aeb6ab11fd55` |
+| Deployment transaction | `00dc146bff84b28e470cb9ec5ea7f737bec808185df0ce739ceb32c9d3bcd30088` |
+| Compliance deployer | `mn_addr_preview176gx8nm3xjt50mygm9srn5wkez09umg8jss5huqckmcxz8hhq42sxg7fvw` |
+| Confirmation time | `2026-08-03T19:08:56.741Z` |
+| Verification | Confirmed by Midnight Preview indexer |
 
 Machine-readable deployment evidence is stored in [`deployment.json`](./deployment.json). The same manifest is copied into the production frontend through `public/deployment.json`.
 
@@ -97,12 +99,14 @@ The automation pins Compact compiler `0.30.0`, matching `@midnight-ntwrk/compact
 │   ├── App.tsx              compliance cockpit
 │   ├── midnightClient.ts    wallet, provider, deployment, and call integration
 │   └── witnesses.ts         wallet-local private witness bindings
-├── deployment.json          Preprod deployment evidence
+├── deployment.json          Preview deployment evidence
 ├── PROPOSAL.md              product idea submission
 └── TESTING.md               judge-facing verification manifest
 ```
 
 ## Local configuration
+
+Compliance test wallets obtain tNight from the [official Midnight Preview faucet](https://faucet.preview.midnight.network/).
 
 ```bash
 cp .env.example .env.local
@@ -110,7 +114,7 @@ npm ci
 npm run dev
 ```
 
-Use a compatible Midnight Preprod wallet such as 1AM or Lace. The browser loads proving and verifier assets from the generated `contracts/managed/kyc_check` output. Live deployment requires a synchronized funded wallet, DUST, and a reachable proof server.
+Use a compatible Midnight Preview wallet such as 1AM or Lace. The browser loads proving and verifier assets from the generated `contracts/managed/kyc_check` output. Live deployment requires a synchronized funded wallet, DUST, and a reachable proof server.
 
 ## Screenshots
 
@@ -126,4 +130,4 @@ Use a compatible Midnight Preprod wallet such as 1AM or Lace. The browser loads 
 
 [Watch the OFAC Country KYC Compliance walkthrough](https://drive.google.com/file/d/1Ru60fpnGaDjtDh5OdSteVjy-LXZxBS5x/view?usp=sharing).
 
-This is a Midnight Preprod prototype, not legal advice or a production KYC decision engine.
+This is a Midnight Preview prototype, not legal advice or a production KYC decision engine.

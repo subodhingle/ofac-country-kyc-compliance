@@ -39,4 +39,4 @@ A regulatory compliance system that lets users prove they are citizens of a non-
 
 ## 5. How to build and deploy on Midnight
 
-The repository is self-contained. Use the commands and environment template in [README.md](./README.md), the verification matrix in [TESTING.md](./TESTING.md), and the deployment workflow in `deploy.mjs`. Live deployment requires a funded Midnight Preprod wallet, DUST, and a reachable proof server.
+The repository is self-contained. Use the commands and environment template in [README.md](./README.md), the verification matrix in [TESTING.md](./TESTING.md), and the deployment workflow in `deploy.mjs`. Live deployment requires a funded Midnight Preview wallet, DUST, and a reachable proof server.
