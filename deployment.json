@@ -1,4 +1,5 @@
 {
+  "contractName": "kyc_check",
   "contractAddress": "33fe17c53bfb7ecb08246f078d64bc71f5799a4e6dd3cd508fc0aeb6ab11fd55",
   "network": "preview",
   "deployedAt": "2026-08-03T19:08:56.741Z",
