@@ -1,5 +1,9 @@
 # Product proposal — OFAC Country KYC Compliance
 
+**Track:** Identity/credentials  
+**Compliance owner:** `subodhingle`  
+**Assurance level:** Preview-deployed MVP; not legal advice
+
 ## Problem
 
 Geographic compliance checks routinely collect a passport, address, nationality, and complete identity record even when the service only needs one answer: is this person outside the prohibited-country policy?

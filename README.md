@@ -4,6 +4,10 @@
 
 A privacy-first compliance cockpit that proves an applicant is outside a prohibited-country policy without publishing their country, passport reference, or complete KYC record.
 
+## Auditor entry points
+
+**Idea:** [PROPOSAL.md](./PROPOSAL.md) · **Executable compliance suite:** [src/test/kyc.test.ts](./src/test/kyc.test.ts) · **Verification matrix:** [TESTING.md](./TESTING.md) · **Preview evidence:** [deployment.json](./deployment.json)
+
 ## Product
 
 Traditional country screening reveals far more identity data than a service needs. This application reduces the decision to a selective-disclosure proof:
