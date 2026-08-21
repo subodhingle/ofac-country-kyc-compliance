@@ -135,3 +135,7 @@ Use a compatible Midnight Preview wallet such as 1AM or Lace. The browser loads 
 [Watch the OFAC Country KYC Compliance walkthrough](https://drive.google.com/file/d/1Ru60fpnGaDjtDh5OdSteVjy-LXZxBS5x/view?usp=sharing).
 
 This is a Midnight Preview prototype, not legal advice or a production KYC decision engine.
+
+## Compliance operations
+
+Before operating OFAC Country KYC Compliance, read the independent [security model](SECURITY.md) and [operations runbook](OPERATIONS.md). Runtime configuration is fail-closed and its executable checks live in [src/test/runtime-config.test.ts](src/test/runtime-config.test.ts).
