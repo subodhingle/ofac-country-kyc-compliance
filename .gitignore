@@ -6,3 +6,6 @@ dist
 .DS_Store
 npm-audit.json
 *.log
+proof-server-status.json
+midnight-level-db/
+.nightforge/
