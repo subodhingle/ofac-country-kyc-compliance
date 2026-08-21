@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Compass, Wallet, Cpu, Lock, Database } from 'lucide-react';
+import { verifyComplianceDeployment, validateComplianceDeploymentRuntime } from './runtimeConfig';
+
+const RUNTIME = validateComplianceDeploymentRuntime({
+  networkId: import.meta.env.VITE_NETWORK_ID,
+  contractAddress: import.meta.env.VITE_CONTRACT_ADDRESS,
+  faucetUrl: import.meta.env.VITE_FAUCET_URL,
+  demoMode: import.meta.env.VITE_DEMO_MODE,
+  production: import.meta.env.PROD,
+});
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -13,22 +22,34 @@ export default function App() {
 
   const [contractDeployed, setContractDeployed] = useState(false);
   const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [runtimeIssue, setRuntimeIssue] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
 
   const [ledger, setLedger] = useState({ kyc_valid: "false", compliance_standard: "FATF-COOPERATIVE" });
   const [formValues, setFormValues] = useState({ country_code: "US", passport_id: "EP-9821-XA" });
-  const [logs, setLogs] = useState([
-    { hash: '0xcd3d...44ee', timestamp: '2026-07-08 09:54:12', status: 'VERIFIED', details: 'KYC check verified against exclusions' }
-  ]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [isProving, setIsProving] = useState(false);
 
   useEffect(() => {
-    fetch('/deployment.json').then(response => response.ok ? response.json() : null).then(deployment => {
-      if (deployment?.contractAddress) {
-        setContractAddress(deployment.contractAddress);
+    fetch('/deployment.json')
+      .then(response => {
+        if (!response.ok) throw new Error('OFAC Country KYC Compliance: deployment.json could not be loaded.');
+        return response.json();
+      })
+      .then(deployment => {
+        const verified = verifyComplianceDeployment(deployment);
+        if (RUNTIME.contractAddress && RUNTIME.contractAddress !== verified.contractAddress) {
+          throw new Error('OFAC Country KYC Compliance: environment address does not match deployment evidence.');
+        }
+        setContractAddress(verified.contractAddress);
         setContractDeployed(true);
-      }
-    }).catch(() => undefined);
+        setRuntimeIssue(null);
+      })
+      .catch(error => {
+        setContractAddress(null);
+        setContractDeployed(false);
+        setRuntimeIssue(error instanceof Error ? error.message : 'OFAC Country KYC Compliance: configuration failed.');
+      });
     const detectLace = () => {
       const hasMidnightWallet = Object.values((window as any).midnight ?? {}).some((candidate: any) => typeof candidate?.connect === 'function');
       setLaceDetected(hasMidnightWallet);
@@ -50,7 +71,7 @@ export default function App() {
         throw new Error('No Midnight wallet connector was detected. Install 1AM or Lace and unlock it.');
       }
 
-      const connected = await wallet.connect(import.meta.env.VITE_NETWORK_ID || 'preview');
+      const connected = await wallet.connect(RUNTIME.networkId);
       (window as any).__midnightConnectedWallet = connected;
       const addressInfo = await connected.getUnshieldedAddress();
       const balances = await connected.getUnshieldedBalances();
@@ -86,31 +107,17 @@ export default function App() {
 
   const requestFaucet = () => {
     if (!walletConnected) return;
-    window.open(import.meta.env.VITE_FAUCET_URL || 'https://faucet.preview.midnight.network/', '_blank', 'noopener,noreferrer');
+    window.open(RUNTIME.faucetUrl, '_blank', 'noopener,noreferrer');
     logTransaction('—', 'FAUCET OPENED', '—', 'Funding must be confirmed by the official Midnight Preview faucet and wallet balance refresh.');
   };
 
   const deployContractAction = async () => {
-    if (import.meta.env.VITE_CONTRACT_ADDRESS) {
-      setContractAddress(import.meta.env.VITE_CONTRACT_ADDRESS);
-      setContractDeployed(true);
-      logTransaction('—', 'DEPLOYMENT CONFIGURED', '—', 'Using the deployed Midnight contract configured for this environment.');
+    if (!contractAddress || runtimeIssue) {
+      alert('OFAC Country KYC Compliance: no verified Preview deployment is available.');
       return;
     }
-    if (!connectedWallet) return;
-    setIsDeploying(true);
-    try {
-      const { deployKyccheckContract } = await import('./midnightClient');
-      const result = await deployKyccheckContract(connectedWallet);
-      setContractAddress(result.contractAddress);
-      setContractDeployed(true);
-      logTransaction(result.txId, 'CONTRACT DEPLOYMENT SUBMITTED', '—', 'kyc_check deployed on Midnight Preview at ' + result.contractAddress);
-    } catch (err) {
-      console.error('Browser deployment failed:', err);
-      alert(err instanceof Error ? err.message : 'Browser deployment failed.');
-    } finally {
-      setIsDeploying(false);
-    }
+    setContractDeployed(true);
+    logTransaction('—', 'VERIFIED DEPLOYMENT ATTACHED', '—', `Using finalized Preview contract ${contractAddress}`);
   };
 
   const verifyKYC = async () => {
@@ -141,6 +148,20 @@ export default function App() {
       ...prev
     ]);
   };
+
+  if (runtimeIssue) {
+    return (
+      <main role="alert" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '32px', background: '#080b12', color: '#f8fafc' }}>
+        <section style={{ width: 'min(620px, 100%)', border: '1px solid #ef4444', borderRadius: '18px', padding: '28px', background: '#151922' }}>
+          <p style={{ margin: 0, color: '#fca5a5', fontWeight: 800, letterSpacing: '0.08em' }}>SAFE START BLOCKED</p>
+          <h1 style={{ margin: '12px 0', fontSize: 'clamp(1.7rem, 5vw, 2.6rem)' }}>OFAC Country KYC Compliance</h1>
+          <p style={{ lineHeight: 1.65, color: '#cbd5e1' }}>{runtimeIssue}</p>
+          <p style={{ lineHeight: 1.65, color: '#94a3b8' }}>No wallet or contract operation was attempted. Restore this repository's own Preview deployment record, then reload.</p>
+          <button onClick={() => window.location.reload()} style={{ marginTop: '8px', padding: '12px 18px', border: 0, borderRadius: '10px', fontWeight: 800, cursor: 'pointer' }}>Retry configuration</button>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', fontFamily: 'Outfit, sans-serif' }}>
