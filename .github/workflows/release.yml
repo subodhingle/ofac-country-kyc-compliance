@@ -34,7 +34,7 @@ jobs:
       - name: Write release manifest
         run: |
           cat > release-manifest.json <<EOF
-          {"project":"ofac-country-kyc-compliance","tag":"${GITHUB_REF_NAME}","commit":"${GITHUB_SHA}","network":"preview"}
+          {"project":"ofac-country-kyc-compliance","tag":"${GITHUB_REF_NAME}","commit":"${GITHUB_SHA}","network":"preprod"}
           EOF
       - name: Package release artifacts
         run: |
