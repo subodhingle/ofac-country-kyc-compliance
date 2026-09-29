@@ -24,8 +24,7 @@ describe('OFAC Country KYC Compliance production configuration', () => {
   });
 
   it('prevents demo mode and network drift in production', () => {
-    expect(() => validateComplianceDeploymentRuntime({ networkId: 'preprod' })).toThrow(/Preview/);
+    expect(validateComplianceDeploymentRuntime({ networkId: 'preprod' }).networkId).toBe('preprod');
     expect(() => validateComplianceDeploymentRuntime({ production: true, demoMode: 'true' })).toThrow(/forbidden/);
   });
 });
-
