@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "alias": "subodh-rk73.vercel.app",
+  "alias": "country-check-seven.vercel.app",
   "buildCommand": "npm run build",
   "outputDirectory": "dist"
 }
