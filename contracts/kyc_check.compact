@@ -3,7 +3,7 @@ pragma language_version >= 0.22;
 import CompactStandardLibrary;
 
 export ledger prohibited_countries: Map<Bytes<32>, Boolean>;
-export ledger trusted_kyc_providers: Map<Bytes<32>, Boolean>;
+export ledger issued_credentials: Map<Bytes<32>, Boolean>;
 export ledger admin: Bytes<32>;
 
 constructor(admin_pk: Bytes<32>) {
@@ -12,11 +12,11 @@ constructor(admin_pk: Bytes<32>) {
 
 witness localSecretKey(): Bytes<32>;
 witness country(): Bytes<32>;
-witness kycSignature(): Bytes<32>;
+witness credentialSalt(): Bytes<32>;
 
-export circuit registerKYCProvider(provider_pk: Bytes<32>): [] {
-  assert(disclose(publicKey(localSecretKey())) == admin, "Only admin can register KYC providers");
-  trusted_kyc_providers.insert(disclose(provider_pk), true);
+export circuit issueCredential(commitment: Bytes<32>): [] {
+  assert(disclose(publicKey(localSecretKey())) == admin, "Only admin can issue KYC credentials");
+  issued_credentials.insert(disclose(commitment), true);
 }
 
 export circuit registerProhibitedCountry(country_hash: Bytes<32>): [] {
@@ -25,18 +25,19 @@ export circuit registerProhibitedCountry(country_hash: Bytes<32>): [] {
 }
 
 export circuit verifyKYC(): Boolean {
-  // Verify KYC signature from trusted authority
-  const provider_pk = verifyCredential(country(), kycSignature());
-  assert(trusted_kyc_providers.member(disclose(provider_pk)), "Credential not signed by trusted KYC provider");
-
-  // Assert country is NOT prohibited
+  const commitment = credentialCommitment(country(), credentialSalt());
+  assert(issued_credentials.member(disclose(commitment)), "KYC credential was not issued by the administrator");
   assert(!prohibited_countries.member(disclose(country())), "User resides in a prohibited country");
   
   return disclose(true);
 }
 
-export circuit verifyCredential(cntry: Bytes<32>, sig: Bytes<32>): Bytes<32> {
-  return sig;
+export circuit credentialCommitment(countryCode: Bytes<32>, salt: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([
+    pad(32, "kyc:credential:"),
+    countryCode,
+    salt
+  ]);
 }
 
 export circuit publicKey(sk: Bytes<32>): Bytes<32> {

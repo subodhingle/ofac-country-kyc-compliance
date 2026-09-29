@@ -4,12 +4,12 @@
   "runtime-version": "0.15.0",
   "circuits": [
     {
-      "name": "registerKYCProvider",
+      "name": "issueCredential",
       "pure": false,
       "proof": true,
       "arguments": [
         {
-          "name": "provider_pk",
+          "name": "commitment",
           "type": {
             "type-name": "Bytes",
             "length": 32
@@ -52,19 +52,19 @@
       }
     },
     {
-      "name": "verifyCredential",
+      "name": "credentialCommitment",
       "pure": true,
       "proof": false,
       "arguments": [
         {
-          "name": "cntry",
+          "name": "countryCode",
           "type": {
             "type-name": "Bytes",
             "length": 32
           }
         },
         {
-          "name": "sig",
+          "name": "salt",
           "type": {
             "type-name": "Bytes",
             "length": 32
@@ -115,7 +115,7 @@
       }
     },
     {
-      "name": "kycSignature",
+      "name": "credentialSalt",
       "arguments": [
       ],
       "result type": {

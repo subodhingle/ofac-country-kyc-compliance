@@ -1,83 +1,56 @@
 import { KYCSimulator } from "./kyc-simulator.js";
 import { setNetworkId } from "@midnight-ntwrk/midnight-js-network-id";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { randomBytes } from "./utils.js";
 
 setNetworkId("undeployed");
 
-describe("Confidential KYC Country Check Smart Contract Tests", () => {
+describe("Confidential country credential contract", () => {
   const adminSecret = randomBytes(32);
-
-  // Setup helper to create a simulator
-  const setupSimulator = (userSecret: Uint8Array, country: Uint8Array, kycSig: Uint8Array) => {
-    const tempSim = new KYCSimulator(adminSecret, new Uint8Array(32), new Uint8Array(32), new Uint8Array(32));
-    const adminPk = tempSim.publicKey(adminSecret);
-    return new KYCSimulator(userSecret, country, kycSig, adminPk);
+  const setup = (country: Uint8Array, salt: Uint8Array) => {
+    const bootstrap = new KYCSimulator(adminSecret, new Uint8Array(32), new Uint8Array(32), new Uint8Array(32));
+    return new KYCSimulator(randomBytes(32), country, salt, bootstrap.publicKey(adminSecret));
   };
 
-  it("1. Properly initializes contract parameters and admin key", () => {
-    const userSecret = randomBytes(32);
-    const simulator = setupSimulator(userSecret, randomBytes(32), new Uint8Array(32));
-    const ledgerState = simulator.getLedger();
-
-    const tempSim = new KYCSimulator(adminSecret, new Uint8Array(32), new Uint8Array(32), new Uint8Array(32));
-    const adminPk = tempSim.publicKey(adminSecret);
-    expect(ledgerState.admin).toEqual(adminPk);
+  it("anchors the compliance administrator", () => {
+    const bootstrap = new KYCSimulator(adminSecret, new Uint8Array(32), new Uint8Array(32), new Uint8Array(32));
+    expect(setup(randomBytes(32), randomBytes(32)).getLedger().admin).toEqual(bootstrap.publicKey(adminSecret));
   });
 
-  it("2. Lets admin register a trusted KYC provider", () => {
-    const userSecret = randomBytes(32);
-    const simulator = setupSimulator(userSecret, randomBytes(32), new Uint8Array(32));
-    const providerPk = randomBytes(32);
-
-    // Switch to admin to register provider
-    simulator.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
-    const ledgerState = simulator.registerKYCProvider(providerPk);
-    expect(ledgerState.trusted_kyc_providers.member(providerPk)).toEqual(true);
-  });
-
-  it("3. Returns true when user country is NOT on prohibited list and signature matches", () => {
-    const userSecret = randomBytes(32);
-    const providerPk = randomBytes(32);
-    const country = randomBytes(32); // E.g., hash("Japan")
-
-    const simulator = setupSimulator(userSecret, country, providerPk);
-
-    // Register provider
-    simulator.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
-    simulator.registerKYCProvider(providerPk);
-
-    // User runs check
-    simulator.switchUser(userSecret, country, providerPk);
-    const isValid = simulator.verifyKYC();
-    expect(isValid).toEqual(true);
-  });
-
-  it("4. Throws when user resides in a prohibited country", () => {
-    const userSecret = randomBytes(32);
-    const providerPk = randomBytes(32);
-    const country = randomBytes(32); // E.g., hash("ProhibitedLand")
-
-    const simulator = setupSimulator(userSecret, country, providerPk);
-
-    // Register provider & prohibited country
-    simulator.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
-    simulator.registerKYCProvider(providerPk);
-    simulator.registerProhibitedCountry(country);
-
-    // User runs check
-    simulator.switchUser(userSecret, country, providerPk);
-    expect(() => simulator.verifyKYC()).toThrow("failed assert: User resides in a prohibited country");
-  });
-
-  it("5. Throws when the credential was signed by an untrusted KYC provider", () => {
-    const userSecret = randomBytes(32);
-    const untrustedProviderPk = randomBytes(32);
+  it("allows only the administrator to issue KYC commitments", () => {
     const country = randomBytes(32);
+    const salt = randomBytes(32);
+    const sim = setup(country, salt);
+    const commitment = sim.credentialCommitment(country, salt);
+    expect(() => sim.issueCredential(commitment)).toThrow(/Only admin/);
+    sim.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
+    expect(sim.issueCredential(commitment).issued_credentials.member(commitment)).toBe(true);
+  });
 
-    const simulator = setupSimulator(userSecret, country, untrustedProviderPk);
+  it("verifies an issued country that is not prohibited", () => {
+    const country = randomBytes(32);
+    const salt = randomBytes(32);
+    const sim = setup(country, salt);
+    const commitment = sim.credentialCommitment(country, salt);
+    sim.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
+    sim.issueCredential(commitment);
+    sim.switchUser(randomBytes(32), country, salt);
+    expect(sim.verifyKYC()).toBe(true);
+  });
 
-    // User runs check without registering provider
-    expect(() => simulator.verifyKYC()).toThrow("failed assert: Credential not signed by trusted KYC provider");
+  it("rejects an issued prohibited country", () => {
+    const country = randomBytes(32);
+    const salt = randomBytes(32);
+    const sim = setup(country, salt);
+    const commitment = sim.credentialCommitment(country, salt);
+    sim.switchUser(adminSecret, new Uint8Array(32), new Uint8Array(32));
+    sim.issueCredential(commitment);
+    sim.registerProhibitedCountry(country);
+    sim.switchUser(randomBytes(32), country, salt);
+    expect(() => sim.verifyKYC()).toThrow(/prohibited/);
+  });
+
+  it("rejects an unissued KYC credential", () => {
+    expect(() => setup(randomBytes(32), randomBytes(32)).verifyKYC()).toThrow(/not issued/);
   });
 });

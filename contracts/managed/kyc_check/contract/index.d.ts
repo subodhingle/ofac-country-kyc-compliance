@@ -3,39 +3,39 @@ import type * as __compactRuntime from '@midnight-ntwrk/compact-runtime';
 export type Witnesses<PS> = {
   localSecretKey(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
   country(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
-  kycSignature(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
+  credentialSalt(context: __compactRuntime.WitnessContext<Ledger, PS>): [PS, Uint8Array];
 }
 
 export type ImpureCircuits<PS> = {
-  registerKYCProvider(context: __compactRuntime.CircuitContext<PS>,
-                      provider_pk_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  issueCredential(context: __compactRuntime.CircuitContext<PS>,
+                  commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   registerProhibitedCountry(context: __compactRuntime.CircuitContext<PS>,
                             country_hash_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verifyKYC(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, boolean>;
 }
 
 export type ProvableCircuits<PS> = {
-  registerKYCProvider(context: __compactRuntime.CircuitContext<PS>,
-                      provider_pk_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  issueCredential(context: __compactRuntime.CircuitContext<PS>,
+                  commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   registerProhibitedCountry(context: __compactRuntime.CircuitContext<PS>,
                             country_hash_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verifyKYC(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, boolean>;
 }
 
 export type PureCircuits = {
-  verifyCredential(cntry_0: Uint8Array, sig_0: Uint8Array): Uint8Array;
+  credentialCommitment(countryCode_0: Uint8Array, salt_0: Uint8Array): Uint8Array;
   publicKey(sk_0: Uint8Array): Uint8Array;
 }
 
 export type Circuits<PS> = {
-  registerKYCProvider(context: __compactRuntime.CircuitContext<PS>,
-                      provider_pk_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  issueCredential(context: __compactRuntime.CircuitContext<PS>,
+                  commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   registerProhibitedCountry(context: __compactRuntime.CircuitContext<PS>,
                             country_hash_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verifyKYC(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, boolean>;
-  verifyCredential(context: __compactRuntime.CircuitContext<PS>,
-                   cntry_0: Uint8Array,
-                   sig_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
+  credentialCommitment(context: __compactRuntime.CircuitContext<PS>,
+                       countryCode_0: Uint8Array,
+                       salt_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
   publicKey(context: __compactRuntime.CircuitContext<PS>, sk_0: Uint8Array): __compactRuntime.CircuitResults<PS, Uint8Array>;
 }
 
@@ -47,7 +47,7 @@ export type Ledger = {
     lookup(key_0: Uint8Array): boolean;
     [Symbol.iterator](): Iterator<[Uint8Array, boolean]>
   };
-  trusted_kyc_providers: {
+  issued_credentials: {
     isEmpty(): boolean;
     size(): bigint;
     member(key_0: Uint8Array): boolean;
