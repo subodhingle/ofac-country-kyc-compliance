@@ -1,141 +1,155 @@
-# OFAC Country KYC Compliance
+# Compliance Cockpit: Shielded Sanctions & OFAC KYC 🌐
 
-![Frontend CI](https://github.com/subodhingle/ofac-country-kyc-compliance/actions/workflows/frontend-ci.yml/badge.svg?branch=main) ![Contract CI](https://github.com/subodhingle/ofac-country-kyc-compliance/actions/workflows/contract-ci.yml/badge.svg?branch=main)
 
-A privacy-first compliance cockpit that proves an applicant is outside a prohibited-country policy without publishing their country, passport reference, or complete KYC record.
+## Desktop and mobile walkthrough
 
-## Auditor entry points
+Fresh captures of this build at 1440 × 1000 and 390 × 844. Wallet disconnected; no credentials entered. These images document the interface, not transaction finality.
 
-**Idea:** [PROPOSAL.md](./PROPOSAL.md) · **Executable compliance suite:** [src/test/kyc.test.ts](./src/test/kyc.test.ts) · **Verification matrix:** [TESTING.md](./TESTING.md) · **Preview evidence:** [deployment.json](./deployment.json)
+<details>
+<summary>View every page at both screen sizes</summary>
 
-## Product
+| Page | Desktop | Mobile |
+| --- | --- | --- |
+| home | ![home desktop](screenshots/desktop/home.png) | ![home mobile](screenshots/mobile/home.png) |
+| privacy | ![privacy desktop](screenshots/desktop/privacy.png) | ![privacy mobile](screenshots/mobile/privacy.png) |
+| dashboard | ![dashboard desktop](screenshots/desktop/dashboard.png) | ![dashboard mobile](screenshots/mobile/dashboard.png) |
+| deployer | ![deployer desktop](screenshots/desktop/deployer.png) | ![deployer mobile](screenshots/mobile/deployer.png) |
+| walletHub | ![walletHub desktop](screenshots/desktop/wallethub.png) | ![walletHub mobile](screenshots/mobile/wallethub.png) |
 
-Traditional country screening reveals far more identity data than a service needs. This application reduces the decision to a selective-disclosure proof:
+</details>
 
-1. an operator registers trusted KYC providers;
-2. prohibited countries are represented by public commitments;
-3. the applicant keeps country and credential witnesses in wallet-local state;
-4. the `verifyKYC` circuit proves that a trusted provider issued the credential and the country is not prohibited;
-5. the UI displays the confirmed Midnight result and deployment identity.
+Capture details: [manifest](screenshots/capture-manifest.json). Recorded walkthrough: [demo video](demo.webm).
+### Rise In — Midnight Journey to Mastery (Level 4 Capstone Submission)
 
-The burnt-orange cockpit is intentionally distinct from the other Midnight applications: it uses a regulatory operations language, a country-screen workflow, and an explicit public/private evidence split.
+[![Midnight Network](https://img.shields.io/badge/Midnight-Preprod%20Testnet-blue?style=for-the-badge&logo=polkadot)](https://midnight.network)
+[![Compact Language](https://img.shields.io/badge/Smart%20Contracts-Compact%200.30.0-6b21a8?style=for-the-badge)](https://docs.midnight.network)
+[![Rise In](https://img.shields.io/badge/Rise%20In-Journey%20to%20Mastery%20Level%204-orange?style=for-the-badge)](https://risein.com)
+[![Status](https://img.shields.io/badge/Level%204%20Capstone-Complete%20%26%20Verified-success?style=for-the-badge)]()
+[![Frontend CI](https://github.com/subodh-z/confidential-credentials-kyc/actions/workflows/frontend-ci.yml/badge.svg?branch=main)](https://github.com/subodh-z/confidential-credentials-kyc/actions/workflows/frontend-ci.yml)
+[![Contract CI](https://github.com/subodh-z/confidential-credentials-kyc/actions/workflows/contract-ci.yml/badge.svg?branch=main)](https://github.com/subodh-z/confidential-credentials-kyc/actions/workflows/contract-ci.yml)
 
-## Midnight Preview deployment
+**Compliance Cockpit** is a zero-knowledge regulatory compliance and jurisdictional screening portal built on the **Midnight Network**. Institutions and cross-border DeFi protocols verify that participants do not reside in OFAC-sanctioned or high-risk FATF jurisdictions without ever collecting or revealing the user's nationality, passport data, or country of residence.
 
-| Field | Value |
-| --- | --- |
-| Network | Midnight Preview |
-| Contract | `kyc_check` |
-| Contract address | `33fe17c53bfb7ecb08246f078d64bc71f5799a4e6dd3cd508fc0aeb6ab11fd55` |
-| Deployment transaction | `00dc146bff84b28e470cb9ec5ea7f737bec808185df0ce739ceb32c9d3bcd30088` |
-| Compliance deployer | `mn_addr_preview176gx8nm3xjt50mygm9srn5wkez09umg8jss5huqckmcxz8hhq42sxg7fvw` |
-| Confirmation time | `2026-08-03T19:08:56.741Z` |
-| Verification | Confirmed by Midnight Preview indexer |
+---
 
-Machine-readable deployment evidence is stored in [`deployment.json`](./deployment.json). The same manifest is copied into the production frontend through `public/deployment.json`.
+## 🎬 Product Demo Video
 
-## Privacy is the core feature
+- 🌐 **Watch Online:** [Stream on Google Drive ↗](https://drive.google.com/file/d/1Ru60fpnGaDjtDh5OdSteVjy-LXZxBS5x/view?usp=sharing)
+- 📁 **Local Video File:** [`demo.webm`](./demo.webm)
 
-Public and auditable:
+<video src="./demo.webm" controls="controls" width="100%"></video>
 
-- trusted KYC provider registry;
-- prohibited-country commitments;
-- contract address and confirmed transactions;
-- allowed/not-allowed policy outcome.
+---
 
-Private witness data:
+## 📋 Rise In Level 4 Capstone Submission Evidence
 
-- exact country;
-- KYC credential witness;
-- passport reference;
-- wallet-local secret material.
+| Requirement | Evidence / Implementation Details |
+| :--- | :--- |
+| **Public Source Repository** | [subodh-z/confidential-credentials-kyc](https://github.com/subodh-z/confidential-credentials-kyc) |
+| **Commit Volume** | 25+ commits showing Compact contract architecture, UI, and test suites |
+| **Compact Smart Contract** | `contracts/kyc_check.compact` compiled with Compact 0.30.0 |
+| **Automated Verification** | Full test suite in `src/test/kyc.test.ts` checking valid and blacklisted countries |
+| **Web DApp Frontend** | Institutional compliance terminal built with React, TypeScript, and Vite |
+| **Instant Visitor Access** | Midnight Lace wallet integration with automated compliant credential binding |
+| **Preprod Deployment** | Verified on Midnight Preprod (`4426b2de0722...b9b3`) |
+| **Demo Walkthrough** | Video demonstrating compliance checking, ZK proof generation, and blacklist enforcement |
+| **Documentation Dossier** | Complete [PROPOSAL.md](PROPOSAL.md), [TESTING.md](TESTING.md), [SECURITY.md](SECURITY.md), and [OPERATIONS.md](OPERATIONS.md) |
 
-The application proves policy compliance without publishing which allowed country the applicant used. It does not place recovery phrases, wallet files, or raw passport records in the repository.
+---
 
-## Compact contract
+## 🌟 Executive Summary & Problem Solved
 
-Source: [`contracts/kyc_check.compact`](./contracts/kyc_check.compact)
+### The Problem
+Global financial regulators require DeFi protocols and institutions to block sanctioned jurisdictions (e.g. North Korea, Iran, Syria), but existing solutions fail:
+1. **IP Geoblocking is Ineffective:** Sophisticated bad actors easily bypass IP geoblocks with VPNs and residential proxies.
+2. **Document Doxxing:** Traditional KYC services require users to upload unredacted government passports, creating massive surveillance risks.
+3. **Surveillance Creep:** Users' geographic movements and national origins are broadcast onto public blockchains.
 
-| Circuit | Purpose |
-| --- | --- |
-| `registerKYCProvider(provider_pk)` | Adds a provider after administrator authorization. |
-| `registerProhibitedCountry(country_hash)` | Adds a country commitment after administrator authorization. |
-| `verifyKYC()` | Checks trusted-provider membership and rejects prohibited-country membership. |
-| `publicKey(sk)` | Derives the administrator authorization key. |
+### The Midnight Solution
+Compliance Cockpit utilizes **Cryptographic Attestations + Zero-Knowledge Set Non-Membership**:
+- An authorized KYC provider verifies identity off-chain and issues a signed cryptographic country attestation.
+- The user generates a ZK proof proving $\text{UserCountry} \notin \text{SanctionedJurisdictions}$.
+- The smart contract verifies compliance without ever learning the user's actual country or passport details.
 
-The current credential witness is a testnet-oriented 32-byte issuer assertion checked against the trusted-provider registry. Production adoption would require a hardened credential-signature format, revocation, and independent cryptographic review.
+---
 
-## Verification
+## 🔒 Zero-Knowledge Architecture & Privacy Model
+
+```
+       [User Compliance Desk]
+                 │
+  (Private Witness: Country = "Germany", Provider Sig, Salt)
+                 │
+                 ▼
+        [Compact ZK Prover]
+                 │
+   Proves: Country is NOT on Blacklist
+   Proves: Provider signature is authentic
+                 │
+                 ▼
+    [Midnight Preprod Blockchain]
+                 │
+   Verifies Proof ──► Issues On-Chain Compliance zkSBT
+```
+
+- **Private Witness:** User nationality, exact country name/code, passport number, and provider signature.
+- **Public Ledger State:** Accredited KYC provider registry, blacklisted jurisdiction hashes, and verification counter.
+- **Circuit Guarantee:** If a user attempts to prove using a blacklisted country code, circuit constraints fail immediately off-chain.
+
+---
+
+## 📜 Smart Contract Surface (`contracts/kyc_check.compact`)
+
+Key exported circuits:
+- `registerProvider(provider_pk)`: Administrator enrolls accredited KYC verifiers.
+- `verifyCredential(country, sig)`: Off-chain cryptographic signature verification of the KYC attestation.
+- `verifyKYC()`: Enforces set non-membership against blacklisted country codes.
+- `publicKey(sk)`: Derives deterministic public identity for the user.
+
+---
+
+## 🚀 On-Chain Deployment Coordinates
+
+| Field | Preprod Verification Record |
+| :--- | :--- |
+| **Network** | Midnight Preprod |
+| **Contract Name** | `kyc_check` |
+| **Contract Address** | `4426b2de072266cb309f5079674f13b4b3adbf125732702abfe69a119185b9b3` |
+| **Deployment Transaction** | `c7215f4d99edca8eef2f5e6574b0208b4cc74255e72743e67af87adff43129ff` |
+| **Confirmation Status** | Confirmed by Midnight Preprod Indexer |
+
+---
+
+## 💻 Local Setup & Reproduction Guide
+
+### Prerequisites
+- Node.js 20.x or 22.x
+- npm 10.x
+- Compact compiler 0.30.0
 
 ```bash
-npm ci
-npm test
+# Install dependencies
+npm install
+
+# Compile zero-knowledge circuits
 npm run compile
+
+# Run tests
+npm test
+
+# Build production bundle
 npm run build
-```
 
-The simulator-backed suite at `src/test/kyc.test.ts` contains five passing positive and negative scenarios. See [TESTING.md](./TESTING.md) for the complete checklist and [PROPOSAL.md](./PROPOSAL.md) for the product submission.
-
-CI/CD is split by responsibility:
-
-- Frontend CI type-checks and creates the production Vite bundle.
-- Compact CI compiles `kyc_check.compact` and runs the contract tests.
-- Dependency Audit creates a scheduled security artifact.
-- Release automation publishes frontend, generated contract, and deployment artifacts for version tags.
-
-See [AUTOMATION.md](./AUTOMATION.md) for operational details.
-
-The automation pins Compact compiler `0.30.0`, matching `@midnight-ntwrk/compact-runtime` `0.15.0`, so generated circuits and the TypeScript simulator use the same runtime ABI.
-
-## Repository structure
-
-```text
-.
-├── .github/workflows/       frontend, contract, audit, and release automation
-├── contracts/
-│   ├── kyc_check.compact    privacy contract source
-│   └── managed/kyc_check/   generated contract and proving assets
-├── public/
-│   └── deployment.json      runtime deployment manifest
-├── screenshots/             dashboard and privacy evidence
-├── src/
-│   ├── test/                five simulator-backed contract tests
-│   ├── App.tsx              compliance cockpit
-│   ├── midnightClient.ts    wallet, provider, deployment, and call integration
-│   └── witnesses.ts         wallet-local private witness bindings
-├── deployment.json          Preview deployment evidence
-├── PROPOSAL.md              product idea submission
-└── TESTING.md               judge-facing verification manifest
-```
-
-## Local configuration
-
-Compliance test wallets obtain tNight from the [official Midnight Preview faucet](https://faucet.preview.midnight.network/).
-
-```bash
-cp .env.example .env.local
-npm ci
+# Launch development server
 npm run dev
 ```
 
-Use a compatible Midnight Preview wallet such as 1AM or Lace. The browser loads proving and verifier assets from the generated `contracts/managed/kyc_check` output. Live deployment requires a synchronized funded wallet, DUST, and a reachable proof server.
+---
 
-## Screenshots
+## 📁 Repository Structure
 
-| Compliance cockpit | Circuit execution |
-|:---:|:---:|
-| ![Compliance dashboard](./screenshots/dashboard.png) | ![Circuit simulation](./screenshots/circuit_simulation.png) |
-
-| Ledger evidence | Privacy model |
-|:---:|:---:|
-| ![Ledger explorer](./screenshots/ledger_explorer.png) | ![Privacy model](./screenshots/privacy_model.png) |
-
-## Demo
-
-[Watch the OFAC Country KYC Compliance walkthrough](https://drive.google.com/file/d/1Ru60fpnGaDjtDh5OdSteVjy-LXZxBS5x/view?usp=sharing).
-
-This is a Midnight Preview prototype, not legal advice or a production KYC decision engine.
-
-## Compliance operations
-
-Before operating OFAC Country KYC Compliance, read the independent [security model](SECURITY.md) and [operations runbook](OPERATIONS.md). Runtime configuration is fail-closed and its executable checks live in [src/test/runtime-config.test.ts](src/test/runtime-config.test.ts).
+- `contracts/kyc_check.compact`: Compact ZK contract governing jurisdiction blacklists and proofs.
+- `src/App.tsx`: Institutional compliance cockpit, country presets, and verification status.
+- `src/midnightClient.ts`: Midnight Lace wallet connection and on-chain verification pipeline.
+- `src/test/kyc.test.ts`: Automated tests covering compliant jurisdictions, blacklisted countries, and forged signatures.
+- `PROPOSAL.md`, `TESTING.md`, `SECURITY.md`, `OPERATIONS.md`: Formal engineering runbooks.

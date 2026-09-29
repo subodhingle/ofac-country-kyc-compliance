@@ -10,7 +10,7 @@ Geographic compliance checks routinely collect a passport, address, nationality,
 
 ## Product
 
-OFAC Country KYC Compliance is a Midnight Preview application for selective-disclosure country screening. An administrator maintains trusted KYC providers and prohibited-country commitments. A user presents a private country credential, and the Compact contract returns a policy result without publishing the country or passport reference.
+OFAC Country KYC Compliance is a Midnight Preview application for selective-disclosure country screening. An administrator maintains issued country-credential commitments and prohibited-country entries. A user presents a private country and salt, and the Compact contract returns a policy result without publishing either value.
 
 ## Primary users
 
@@ -33,9 +33,9 @@ Private:
 
 - the applicant's country witness;
 - credential witness;
-- passport reference and wallet-local secret material.
+- credential salt and wallet-local secret material.
 
-The proof demonstrates that a trusted provider attested to a country that is not prohibited. It does not publish which allowed country was used.
+The proof demonstrates that the administrator issued a commitment for a country that is not prohibited. It does not publish which allowed country was used.
 
 ## User journey
 
